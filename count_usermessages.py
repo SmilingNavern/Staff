@@ -4,6 +4,8 @@
 
 import requests
 import re
+import argparse
+import sys
 
 
 def posts_sorted_count(posts_of_users):
@@ -40,9 +42,33 @@ def find_user_posts(topic_id, start_page, last_page):
 
     return user_posts
 
+
 def main():
 
-    users_posts = find_user_posts("37314", 4, 11)
+    argps = argparse.ArgumentParser()
+    argps.add_argument("topic", type=str,
+                help="ID of topic on forum")
+    argps.add_argument("-s", "--start", type=int,
+                help="ID of start page in topic")
+    argps.add_argument("-e", "--end", type=int,
+                help="ID of end page in topic")
+
+    args = argps.parse_args()
+
+    topic = args.topic
+
+    if args.start:
+        page_start = args.start
+    else:
+        page_start = 1
+
+    if args.end:
+        end_page = args.end
+    else:
+        end_page = 1
+
+
+    users_posts = find_user_posts(topic, page_start, end_page)
     posts_sorted_count(users_posts)
     
 if __name__ == '__main__':
