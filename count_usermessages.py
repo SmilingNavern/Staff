@@ -6,7 +6,7 @@ import requests
 import re
 
 
-def posts_count(posts_of_users):
+def posts_sorted_count(posts_of_users):
     users_list = posts_of_users.keys()
 
     users_list = sorted(users_list, key=posts_of_users.__getitem__, reverse = True)
@@ -14,17 +14,16 @@ def posts_count(posts_of_users):
     for name in users_list:
         print "%s => %d" % (name, posts_of_users[name])
 
-def main(last_page):
-    user_posts = {}
-
-    #User values
-    topic_id = "37314"
-    page_id = 4
+def find_user_posts(topic_id, start_page, last_page):
 
     pattern = re.compile(r'quote\(selection,\'(?P<user_name>.*)\'\)')
 
+    user_posts = {}
 
-    for i in xrange(page_id,last_page+1):
+    page_id = start_page
+
+    for i in xrange(start_page, last_page + 1):
+
         payload = {'topic' : topic_id, 'page' : page_id}
         page_content = requests.get("http://reps.ru/forum.php", params=payload)
         
@@ -39,8 +38,12 @@ def main(last_page):
 
         page_id += 1
 
-    
-    posts_count(user_posts)
+    return user_posts
+
+def main():
+
+    users_posts = find_user_posts("37314", 4, 11)
+    posts_sorted_count(users_posts)
     
 if __name__ == '__main__':
-    main(10)
+    main()
