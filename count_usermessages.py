@@ -13,8 +13,18 @@ def posts_sorted_count(posts_of_users):
 
     users_list = sorted(users_list, key=posts_of_users.__getitem__, reverse = True)
 
+    total_posts = 0
+
     for name in users_list:
-        print "%s => %d" % (name, posts_of_users[name])
+        total_posts += posts_of_users[name]
+
+    i = 1
+    for name in users_list:
+        percents_post = (posts_of_users[name] / (total_posts / 100.0))
+        print "%d) %s => %d (%f percents)" % (i, name, posts_of_users[name], percents_post)
+        i += 1
+
+    print "Total: %d" % total_posts
 
 def find_user_posts(topic_id, start_page, last_page):
 
